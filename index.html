@@ -5,12 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hrishikesh Pradhan</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body id="body-main">
+    <script type="module" src="/src/main.js"></script>
     <div></div>
     
     <header>
@@ -41,8 +38,7 @@
                 <p class="hero-subtitle">A <span class="typing-effect"></span></p>
                 <div class="hero-buttons">
                     <a href="#projects" class="btn btn-primary">View My Work</a>
-                    <a href="https://drive.google.com/file/d/1ssYk05iQWFvPuyvUz2r7sbC4iPlzavny/view" class="btn btn-secondary"
-                       target="_blank">Resume</a>
+                    <a href="#" id="resume-btn" class="btn btn-secondary">Resume</a>
                 </div>
                 <div class="social-icons">
                     <a href="https://github.com/hspgit" aria-label="GitHub" target="_blank"><i
@@ -361,11 +357,29 @@
         <i class="fas fa-arrow-up"></i>
     </div>
 
-    <script type="module" src="/src/main.js"></script>
-    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>-->
+    <div id="pdf-modal" class="pdf-modal">
+        <div class="pdf-modal-content">
+            <div class="pdf-modal-header">
+                <h3>Resume - Hrishikesh Pradhan</h3>
+                <button class="pdf-modal-close" aria-label="Close PDF Viewer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="pdf-modal-body">
+                <canvas id="pdf-canvas"></canvas>
+                <div class="pdf-controls">
+                    <!-- <button id="pdf-prev" class="pdf-btn" disabled>
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button> -->
+                    <span id="pdf-page-info">Page 1 of 1</span>
+                    <!-- <button id="pdf-next" class="pdf-btn" disabled>
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
 </body>
 </html>

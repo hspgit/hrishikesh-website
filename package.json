@@ -10,5 +10,11 @@
   },
   "devDependencies": {
     "vite": "^7.1.2"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.2.6",
+    "@fortawesome/fontawesome-free": "^7.0.0",
+    "pdfjs-dist": "^5.4.54",
+    "typed.js": "^2.1.0"
   }
 }

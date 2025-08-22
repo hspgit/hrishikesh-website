@@ -1,4 +1,10 @@
 import "./style.css";
+import Typed from 'typed.js';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import '@fontsource/jetbrains-mono';
+import * as pdfjsLib from 'pdfjs-dist';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs?url';
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('header');
@@ -8,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('section');
     const scrollToTopBtn = document.querySelector('.scroll-to-top');
     
-    // Initialize Typed.js
     var typed = new Typed('.typing-effect', {
         strings: [
             "passionate web developer.",
@@ -104,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', () => {
         highlightActiveNavLink();
         
-        // Handle scroll to top button visibility
         if (window.pageYOffset > 300) {
             scrollToTopBtn.classList.add('active');
         } else {
@@ -119,4 +123,115 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     highlightActiveNavLink();
+    
+    const pdfModal = document.getElementById('pdf-modal');
+    const resumeBtn = document.getElementById('resume-btn');
+    const pdfModalClose = document.querySelector('.pdf-modal-close');
+    const pdfCanvas = document.getElementById('pdf-canvas');
+    const pdfPrevBtn = document.getElementById('pdf-prev');
+    const pdfNextBtn = document.getElementById('pdf-next');
+    const pdfPageInfo = document.getElementById('pdf-page-info');
+    
+    let pdfDoc = null;
+    let currentPage = 1;
+    let totalPages = 1;
+    let scale = 1.5;
+    
+    pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+    
+    const renderPage = (pageNum) => {
+        if (!pdfDoc) return;
+        
+        pdfDoc.getPage(pageNum).then(page => {
+            const viewport = page.getViewport({ scale: scale });
+            const context = pdfCanvas.getContext('2d');
+            pdfCanvas.height = viewport.height;
+            pdfCanvas.width = viewport.width;
+            
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+            
+            page.render(renderContext);
+            
+            // Update page info and buttons
+            pdfPageInfo.textContent = `Page ${pageNum} of ${totalPages}`;
+            pdfPrevBtn.disabled = pageNum <= 1;
+            pdfNextBtn.disabled = pageNum >= totalPages;
+        });
+    };
+    
+    const loadPDF = () => {
+        const pdfUrl = '/resume.pdf';
+        
+        pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
+            pdfDoc = pdf;
+            totalPages = pdf.numPages;
+            currentPage = 1;
+            
+            if (window.innerWidth <= 768) {
+                scale = 1;
+            }
+            
+            renderPage(currentPage);
+        }).catch(error => {
+            console.error('Error loading PDF:', error);
+            alert('Error loading PDF file. Please try again.');
+        });
+    };
+    
+    const openPdfModal = () => {
+        pdfModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        if (!pdfDoc) {
+            loadPDF();
+        }
+    };
+    
+    const closePdfModal = () => {
+        pdfModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    };
+    
+    resumeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openPdfModal();
+    });
+    
+    pdfModalClose.addEventListener('click', closePdfModal);
+    
+    pdfModal.addEventListener('click', (e) => {
+        if (e.target === pdfModal) {
+            closePdfModal();
+        }
+    });
+    
+    pdfPrevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPage(currentPage);
+        }
+    });
+    
+    pdfNextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderPage(currentPage);
+        }
+    });
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && pdfModal.classList.contains('active')) {
+            closePdfModal();
+        }
+    });
+    
+    window.addEventListener('resize', () => {
+        if (pdfDoc && pdfModal.classList.contains('active')) {
+            scale = window.innerWidth <= 768 ? 1 : 1.5;
+            renderPage(currentPage);
+        }
+    });
 });
